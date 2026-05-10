@@ -41,14 +41,13 @@ This layer activates only when the user asks for it — via keywords like *cinem
 
 ## Installation
 
-Clone this repo and link it into your Claude Code skills directory:
+Install via [skills.sh](https://skills.sh):
 
 ```sh
-git clone git@github.com:D3OXY/d3-design.git
-ln -s "$(pwd)/d3-design" ~/.claude/skills/d3-design
+npx skills add D3OXY/d3-design
 ```
 
-Verify with `/skills` inside Claude Code — `d3-design` should appear in the list.
+The CLI handles placement into the right directory for your agent (Claude Code, Cursor, Copilot, Windsurf, Gemini, Cline, and others). Verify with `/skills` inside Claude Code — `d3-design` should appear in the list.
 
 ## Files
 
