@@ -1,71 +1,81 @@
-# d3-design
+# skills
 
-A personal Claude Code agent skill encoding a two-layer design system: universal UI principles that inform every interface, plus an opinionated cinematic floating-glass aesthetic available on-request.
+A **multi-skill** [agent skills](https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills/overview) repository: each folder under `skills/` is one installable capability for coding agents (Claude Code, Cursor, Copilot, and others via the [Skills CLI](https://github.com/vercel-labs/skills)).
 
-## What this is
+## Skills in this repo
 
-`d3-design` is an [agent skill](https://docs.anthropic.com/en/docs/agent-skills) for Claude Code. When installed, Claude automatically pulls it into context for UI / frontend / component work and applies the embedded design philosophy to whatever it builds.
+| Skill | Summary |
+| --- | --- |
+| [`d3-design`](skills/d3-design/) | UI / frontend design philosophy: universal principles plus an on-request cinematic floating-glass aesthetic (`SKILL.md`, `cinematic-aesthetic.md`, `blueprints.md`). |
+| [`create-pr`](skills/create-pr/) | Pull request workflow: branch hygiene, conventional titles, reviewer-first descriptions, test plans, and review checklist. |
 
-## The two-layer model
-
-**Universal principles** — always applied, aesthetic-agnostic:
-
-- Foundation as Material — never pure black or pure white
-- Controlled contrast
-- Spatial layering
-- Motion hierarchy
-- Premium restraint
-- Editorial typography
-- Performance-first animation
-
-These work in any aesthetic — light, dark, brutalist, Material, anything.
-
-**Cinematic floating-glass aesthetic** — on-request, opinionated:
-
-- Near-black layered foundation
-- Glassmorphism with `backdrop-filter` blur
-- Floating window architecture
-- Ambient lighting and subtle glow
-- Cursor-reactive surfaces
-- Spring physics motion
-- Atmospheric backgrounds with noise
-
-This layer activates only when the user asks for it — via keywords like *cinematic*, *premium*, *glass*, *spatial*, *VisionOS-inspired*, *Arc/Linear/Raycast-style*, *AI control panel*, *floating dashboard*, etc.
-
-## What this isn't
-
-- Not a UI component library or kit — it's a *philosophy* skill
-- Not a replacement for your project's design system
-- Not for every aesthetic — if you want playful, colorful, cartoonish, or maximalist UI, this skill will fight you
-- Not framework-locked — recommendations exist (Next.js, Tailwind, Framer Motion, Radix), but the principles apply broadly
-
-## Installation
-
-Install via [skills.sh](https://skills.sh):
+List what the CLI would install without downloading:
 
 ```sh
-npx skills add D3OXY/d3-design
+npx skills add YOUR_GITHUB_USER/skills --list
 ```
 
-The CLI handles placement into the right directory for your agent (Claude Code, Cursor, Copilot, Windsurf, Gemini, Cline, and others). Verify with `/skills` inside Claude Code — `d3-design` should appear in the list.
+Install **one** skill by name (recommended for focused installs):
 
-## Files
+```sh
+npx skills add YOUR_GITHUB_USER/skills --skill d3-design
+npx skills add YOUR_GITHUB_USER/skills --skill create-pr
+```
 
-| File | Purpose | When loaded |
-| --- | --- | --- |
-| `SKILL.md` | Universal principles, motion system, anti-patterns, checklists | Whenever the skill activates (any UI / frontend work) |
-| `cinematic-aesthetic.md` | The opinionated dark/glass aesthetic — color palette, glass formulas, lighting, blur values, AI cursor styling, design tokens | Loaded only when the user asks for the cinematic look |
-| `blueprints.md` | Composition recipes — landing pages, dashboards, AI chat, command palettes, atmosphere recipes, real-world references | Loaded when building those specific surfaces |
+Install **several** skills in one command:
 
-## Aesthetic in one line
+```sh
+npx skills add YOUR_GITHUB_USER/skills --skill d3-design --skill create-pr
+```
 
-> "High-end software crafted like luxury hardware."
+Install **all** skills from this repository (non-interactive):
 
-Inspirations: Apple VisionOS · Arc Browser · Linear · Raycast · Stripe · Vercel.
+```sh
+npx skills add YOUR_GITHUB_USER/skills --all --yes
+```
 
-## Customization
+Replace `YOUR_GITHUB_USER` with your GitHub username or organization. If you install from a **renamed** GitHub repo named `skills`, the shorthand is `owner/skills`.
 
-The skill is designed to be forked. The universal principles are stable; the cinematic aesthetic is a strong recommendation, not a mandate. Adjust hex values, accent palettes, blur strengths, or motion timing to your brand — the underlying principles will still hold.
+You can also install from a **subpath** when a host supports it, for example a single skill directory (see [Skills CLI](https://github.com/vercel-labs/skills) docs for URL formats).
+
+### Verify
+
+- **Claude Code:** `/skills` should list installed skills after add.
+- **Cursor:** skills land per the CLI’s agent rules; confirm the skill appears in your skills or rules UI after installation.
+
+## Repository layout
+
+```text
+skills/
+  d3-design/
+    SKILL.md
+    cinematic-aesthetic.md
+    blueprints.md
+  create-pr/
+    SKILL.md
+LICENSE
+README.md
+```
+
+Each skill’s **`SKILL.md`** includes YAML frontmatter (`name`, `description`) used for discovery and activation.
+
+## Renaming this repo on GitHub
+
+If you are migrating from a single-skill repo (for example `d3-design`) to this **`skills`** umbrella:
+
+1. On GitHub: **Settings → General → Repository name** → rename to `skills` (or your chosen name).
+2. Update **About** description, for example: *Agent skills pack: UI design philosophy (d3-design) and PR workflow (create-pr). Install with `npx skills add owner/skills`.*
+3. Update any badges, links, or registry entries that still pointed at the old repo name.
+
+Local clone:
+
+```sh
+git remote set-url origin https://github.com/YOUR_GITHUB_USER/skills.git
+```
+
+## Forking and customization
+
+Skills are meant to be **forked**. Adjust copy, checklists, or tokens to match your team; keep `name` in frontmatter aligned with the folder name if you rely on `--skill` installs.
 
 ## License
 
