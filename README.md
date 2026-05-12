@@ -9,7 +9,7 @@ A **multi-skill** [agent skills](https://docs.anthropic.com/en/docs/agents-and-t
 | Skill | Summary |
 | --- | --- |
 | [`d3-design`](skills/d3-design/) | UI / frontend design philosophy: universal principles plus an on-request cinematic floating-glass aesthetic (`SKILL.md`, `cinematic-aesthetic.md`, `blueprints.md`). |
-| [`create-pr`](skills/create-pr/) | Pull request workflow: branch hygiene, conventional titles, reviewer-first descriptions, test plans, and review checklist. |
+| [`create-pr`](skills/create-pr/) | **Agent skill** (not a slash command): PR workflow including optional `gh pr create`, branch resolution, checks, confirmation, titles, and bodies. |
 
 List what the CLI would install without downloading:
 

@@ -1,69 +1,138 @@
 ---
 name: create-pr
-description: Pull request workflow for coding agents—branch hygiene, atomic commits, conventional PR titles, reviewer-first descriptions, test plans, and risk notes. Use when opening a PR, drafting a GitHub/GitLab description, splitting work for review, or preparing a change for human reviewers.
+description: Pull request workflow for coding agents—branch selection, GitHub CLI (gh pr create), tests before PR, confirmation flow, conventional titles, reviewer-first bodies. Use when opening a PR, drafting a GitHub description, or when the user asks in natural language what used to be the create-pr command (e.g. skip checks, yes without prompt, branch A to B).
 ---
 
 # create-pr
 
-Guidance for turning finished work into a **merge-ready pull request** that respects reviewers’ time and matches common engineering conventions.
+This is an **agent skill** (discovered from `SKILL.md`). It is **not** a Cursor slash command. Apply it whenever the user wants a **real PR opened** or **PR copy drafted** with the workflows below.
+
+Guidance for turning work into a **merge-ready pull request** and, when requested, executing **`gh pr create`** with the right branches and safeguards.
 
 ## When to use this skill
 
-- The user asks to **open a PR**, **draft a PR description**, or **prepare for review**
-- A feature or fix is **done locally** and needs to be **packaged** for others
+- The user asks to **open a PR**, **create a pull request**, **run create-pr**, or **draft a PR description**
+- A feature or fix is **done locally** and needs to be **packaged** for review
 - Work should be **split** into smaller PRs for safer review
 
-## Before you open the PR
+## Mapping from legacy `/create-pr` behavior
 
-1. **Branch** — Use a descriptive branch (examples: `feat/auth-magic-link`, `fix/checkout-total`, `issue-1234-session-timeout`).
-2. **Scope** — Prefer **one logical change** per PR. If the diff is large or mixes concerns, split into follow-up PRs with a short note in each description linking the series.
-3. **History** — Prefer **atomic commits** with **conventional** messages (`feat`, `fix`, `refactor`, `test`, `docs`, `style`, `chore`). Squash only when the project already does that by convention.
-4. **Quality bar** — Run the project’s **format/lint/test** commands when they exist; fix failures before requesting review.
-5. **Noise** — Do not commit secrets, large generated artifacts, or unrelated formatting churn.
+If the user previously used a **`/create-pr`** command with arguments, interpret the same intent in **natural language**:
 
-## PR title
+| User intent | Behavior |
+| --- | --- |
+| No branch named | PR from **current branch** → **default base** (infer `dev`, `main`, or repo default; ask if unclear) |
+| One branch name | PR from **current branch** → that branch as **base** |
+| Two branches, or `A -> B` / `A to B` | PR from **first** (head) → **second** (base) |
+| Skip checks / `--skip-check` | Skip the **Run tests and checks** step |
+| Yes / no prompts / `-y` / `--yes` | Skip the **confirmation** step before `gh pr create` |
 
-Use a single line, imperative mood, matching conventional style:
+Do **not** tell the user to type `/create-pr`; describe what you will do or ask for missing details in plain language.
+
+---
+
+## GitHub CLI workflow (when opening the PR)
+
+Use this when the user wants an actual PR on GitHub (not only a description in chat).
+
+### Step 1 — Determine branches
+
+1. Current branch: `git branch --show-current`
+2. From user text, resolve **source (head)** and **target (base)** per the table above
+3. If the user is on the **base branch** with no explicit source/target, **stop** and say they should switch to a feature branch or name both branches
+
+### Step 2 — Validate branch state
+
+1. `git status --porcelain` — if dirty, **stop** and ask whether to commit, stash, or proceed
+2. Confirm the **source** branch exists locally (or on remote if that is the workflow)
+
+### Step 3 — Run tests and checks
+
+**Skip this entire step** if the user asked to skip checks (`--skip-check`, “skip tests”, etc.).
+
+1. Detect package manager (`pnpm-lock.yaml`, `yarn.lock`, `package-lock.json`, `bun.lockb`, etc.)
+2. Prefer **scripts from `package.json`** (or `Makefile` / `pyproject.toml` / project docs) — do not invent tool invocations
+3. Typical order when scripts exist: typecheck → lint/check → build → tests (and project-specific checks such as `knip` if present)
+4. **Do not** start dev servers, watch mode, or long-running processes
+
+### Step 4 — Push source branch
+
+`git push -u origin <source-branch>` when commits are not yet on the remote.
+
+### Step 5 — Gather PR context
+
+1. `git fetch origin <target-branch>` (or full fetch if appropriate)
+2. `git log origin/<target-branch>...<source-branch> --oneline`
+3. `git diff origin/<target-branch>...<source-branch> --stat`
+
+### Step 6 — Confirm (unless user waived)
+
+Unless `-y` / `--yes` / explicit “go ahead without asking”:
+
+Show **source → target**, commit count, and diff summary, then ask for confirmation before creating the PR.
+
+### Step 7 — Create PR with GitHub CLI
+
+After confirmation (or if user waived):
+
+```bash
+gh pr create --base <target-branch> --head <source-branch> --title "<title>" --body "$(cat <<'EOF'
+## Summary
+<concise bullets>
+
+## Test plan
+- [ ] …
+
+EOF
+)"
+```
+
+**Title:** conventional format `type(scope): description`; include issue `(#123)` when relevant.
+
+### Step 8 — Finish
+
+Return the PR URL, short summary, and suggested next steps (reviewers, CI). Open in browser when the environment allows (e.g. `open <url>` on macOS).
+
+### Workflow discipline
+
+- Prefer **only** the commands needed for this flow; do not run unrelated tooling
+- No destructive git (e.g. force push) unless the user explicitly requests it and it is safe
+- If a step fails, stop and report before continuing
+
+---
+
+## PR title and description (reviewer-first)
+
+Use a single-line **title**, imperative mood:
 
 ```text
 type(scope): short description
 ```
 
-Examples: `feat(auth): add magic link callback`, `fix(api): handle empty pagination cursor`.
+**Body** — complete sentences, optional sections:
 
-If the repo does not use scopes, `type: description` is acceptable when that matches existing PRs.
+1. **Summary** — what changed and why  
+2. **Implementation notes** — tradeoffs, non-obvious choices  
+3. **How to test** — commands or numbered steps  
+4. **Risk / rollout** — migrations, flags, breaking changes  
+5. **Links** — issues, designs, related PRs  
 
-## PR description (reviewer-first)
+Do **not** mention AI tools in commits, titles, or PR bodies. Avoid vague titles (“fix stuff”, “updates”).
 
-Write in **complete sentences**. Order sections roughly like this (omit empty sections):
+---
 
-1. **Summary** — What changed and **why** (problem or goal), in plain language.
-2. **Implementation notes** — Non-obvious decisions, tradeoffs, or alternatives considered.
-3. **How to test** — Exact commands or **numbered steps** a reviewer can follow.
-4. **Risk / rollout** — Breaking changes, migrations, feature flags, or anything that could fail in production.
-5. **Links** — Issue tracker IDs, design docs, or related PRs.
+## Before you open the PR (general)
 
-### What to avoid in commits and PRs
+1. **Branch names** should be descriptive (`feat/…`, `fix/…`, `issue-1234-…`)
+2. **Scope** — one logical change per PR when possible; link related PRs if split
+3. **Commits** — conventional messages; follow repo squash/rebase norms
+4. **Noise** — no secrets, no large unrelated churn
 
-- Do **not** mention AI tools, assistants, or automated agents in commit messages, PR titles, or PR bodies.
-- Do **not** use vague titles like “updates” or “fixes” without saying **what** and **where**.
-
-## Optional extras
-
-- **UI changes** — Describe what to look at; attach screenshots or short screen recordings when helpful.
-- **API / schema changes** — Call out versioning, backwards compatibility, and example payloads.
-- **Config / env** — List new variables with safe example values (never real secrets).
-
-## After opening
-
-- If CI fails, **fix or revert** before re-requesting review.
-- Keep the PR description **updated** if the approach changes during review.
-- Respond to feedback with **focused follow-up commits** (or a single amend/squash if that is the team norm).
+---
 
 ## Checklist
 
-- [ ] Title matches repo conventions and describes the change clearly
-- [ ] Description explains motivation, approach, and how to verify
-- [ ] Diff is scoped and easy to review
-- [ ] Tests or manual test plan included where appropriate
-- [ ] No sensitive data or unrelated files in the branch
+- [ ] Source and base branches are correct and confirmed with user when required  
+- [ ] Checks run or intentionally skipped per user  
+- [ ] Title and body match team conventions  
+- [ ] PR URL returned after `gh pr create`  
