@@ -2,6 +2,8 @@
 
 A **multi-skill** [agent skills](https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills/overview) repository: each folder under `skills/` is one installable capability for coding agents (Claude Code, Cursor, Copilot, and others via the [Skills CLI](https://github.com/vercel-labs/skills)).
 
+**Repository:** [github.com/D3OXY/skills](https://github.com/D3OXY/skills)
+
 ## Skills in this repo
 
 | Skill | Summary |
@@ -12,31 +14,29 @@ A **multi-skill** [agent skills](https://docs.anthropic.com/en/docs/agents-and-t
 List what the CLI would install without downloading:
 
 ```sh
-npx skills add YOUR_GITHUB_USER/skills --list
+npx skills add D3OXY/skills --list
 ```
 
 Install **one** skill by name (recommended for focused installs):
 
 ```sh
-npx skills add YOUR_GITHUB_USER/skills --skill d3-design
-npx skills add YOUR_GITHUB_USER/skills --skill create-pr
+npx skills add D3OXY/skills --skill d3-design
+npx skills add D3OXY/skills --skill create-pr
 ```
 
 Install **several** skills in one command:
 
 ```sh
-npx skills add YOUR_GITHUB_USER/skills --skill d3-design --skill create-pr
+npx skills add D3OXY/skills --skill d3-design --skill create-pr
 ```
 
 Install **all** skills from this repository (non-interactive):
 
 ```sh
-npx skills add YOUR_GITHUB_USER/skills --all --yes
+npx skills add D3OXY/skills --all --yes
 ```
 
-Replace `YOUR_GITHUB_USER` with your GitHub username or organization. If you install from a **renamed** GitHub repo named `skills`, the shorthand is `owner/skills`.
-
-You can also install from a **subpath** when a host supports it, for example a single skill directory (see [Skills CLI](https://github.com/vercel-labs/skills) docs for URL formats).
+Forks: substitute your GitHub user or org for `D3OXY`. You can also install from a **subpath** when your host supports it (see [Skills CLI](https://github.com/vercel-labs/skills) docs for URL formats).
 
 ### Verify
 
@@ -59,19 +59,25 @@ README.md
 
 Each skill’s **`SKILL.md`** includes YAML frontmatter (`name`, `description`) used for discovery and activation.
 
-## Renaming this repo on GitHub
+## GitHub “About” description (suggested)
 
-If you are migrating from a single-skill repo (for example `d3-design`) to this **`skills`** umbrella:
+Use this or shorten it in the repository **About** field:
 
-1. On GitHub: **Settings → General → Repository name** → rename to `skills` (or your chosen name).
-2. Update **About** description, for example: *Agent skills pack: UI design philosophy (d3-design) and PR workflow (create-pr). Install with `npx skills add owner/skills`.*
-3. Update any badges, links, or registry entries that still pointed at the old repo name.
+> Multi-skill agent pack: **d3-design** (UI / frontend philosophy + optional cinematic glass aesthetic) and **create-pr** (PR titles, bodies, and review checklist). Install: `npx skills add D3OXY/skills`.
 
-Local clone:
+## Clone
 
 ```sh
-git remote set-url origin https://github.com/YOUR_GITHUB_USER/skills.git
+git clone https://github.com/D3OXY/skills.git
 ```
+
+If you still have a local remote pointing at the old `d3-design` name:
+
+```sh
+git remote set-url origin https://github.com/D3OXY/skills.git
+```
+
+GitHub redirects `D3OXY/d3-design` to `D3OXY/skills` after a rename, but updating `origin` avoids confusion.
 
 ## Forking and customization
 
