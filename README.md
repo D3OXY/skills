@@ -10,6 +10,7 @@ A **multi-skill** [agent skills](https://docs.anthropic.com/en/docs/agents-and-t
 | --- | --- |
 | [`d3-design`](skills/d3-design/) | UI / frontend design philosophy: universal principles plus an on-request cinematic floating-glass aesthetic (`SKILL.md`, `cinematic-aesthetic.md`, `blueprints.md`). |
 | [`create-pr`](skills/create-pr/) | **Agent skill** (not a slash command): PR workflow including optional `gh pr create`, branch resolution, checks, confirmation, titles, and bodies. |
+| [`ubiquitous-language`](skills/ubiquitous-language/) | Extracts a DDD-style domain glossary from the current conversation, flags ambiguities, and writes `UBIQUITOUS_LANGUAGE.md`. |
 
 List what the CLI would install without downloading:
 
@@ -22,12 +23,13 @@ Install **one** skill by name (recommended for focused installs):
 ```sh
 npx skills add D3OXY/skills --skill d3-design
 npx skills add D3OXY/skills --skill create-pr
+npx skills add D3OXY/skills --skill ubiquitous-language
 ```
 
 Install **several** skills in one command:
 
 ```sh
-npx skills add D3OXY/skills --skill d3-design --skill create-pr
+npx skills add D3OXY/skills --skill d3-design --skill create-pr --skill ubiquitous-language
 ```
 
 Install **all** skills from this repository (non-interactive):
@@ -52,6 +54,8 @@ skills/
     cinematic-aesthetic.md
     blueprints.md
   create-pr/
+    SKILL.md
+  ubiquitous-language/
     SKILL.md
 LICENSE
 README.md
