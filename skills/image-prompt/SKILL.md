@@ -22,7 +22,7 @@ Generate a prompt for an image generation model(gpt-image-2). Use when an image 
 - Each prompt should be in a separate block.
 - Each block should have a copy button.
 - Each block should have Badges with the properties of the image. (Size, Aspect Ratio, Style etc..)
-- Each block should have a "Open in ChatGPT" button. When clicked, it should open the prompt in the ChatGPT interface.
+- Each block should have a "Open in ChatGPT" button. When clicked, it should open the prompt in the ChatGPT interface (temporary chat window).
 
 ## Must Have
 
